@@ -10,6 +10,7 @@ ADD_PRODUCTS = {} #This saves the products added by manager
 SAVE_EXISTENT = [] #This saves the products existent
 SAVE_PRICE = [] #This saves the prices
 CARDS = [] #This saves the cards
+SAVE_PRODUCTS_ONCE = []
 
 
 def reset():
@@ -114,11 +115,13 @@ def sell_products():
         else:
             print "This product is not available"
 
-def count_products():
+def count_products(list_products):
     """This counts each item"""
-    for each_item in SAVE_EXISTENT:
-        num_of_products = SAVE_EXISTENT.count(each_item)
-        print num_of_products, (each_item) + "(s)", "a", ("Q%.2f c/u") % (ADD_PRODUCTS[each_item])
+    for each_item in ADD_PRODUCTS:
+        num_of_products = list_products.count(each_item)
+        if num_of_products > 0:
+            price_product = ADD_PRODUCTS[each_item]
+            print num_of_products, each_item+ "(s)", "a", ("Q%.2f c/u") % price_product
 
 #test 5
 def gold_card(subtotal):
@@ -173,7 +176,7 @@ def invoice():
     print "---DESPENSA FAMILIAR---\n"
     print "Name: %s" % name
     print ""
-    print count_products()
+    count_products(SAVE_EXISTENT)
     print "\nThe subtotal is:     Q%.2f" % sub_total()
     print "The discount is:     Q%.2f" % discount_card()
     print "The tax is:          Q%.2f" % tax()
