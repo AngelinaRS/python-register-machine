@@ -69,7 +69,7 @@ def add_product_with_price():
     add_item(product, price)
 
     while True:
-        another = raw_input("Do you want to insert another article? y/n ")
+        another = raw_input("\nDo you want to insert another article? y/n ")
         another = another.lower()
         if another == "y":
             product = name_product()
@@ -113,7 +113,7 @@ def sell_products():
         elif sell == "silver":
             CARDS.append("silver") #This adds the silver card
         else:
-            print "This product is not available"
+            print "\nThis product is not available"
 
 def count_products(list_products):
     """This counts each item"""
@@ -176,24 +176,6 @@ def total_final(with_discount=0, iva=0):
         iva = tax()
     return with_discount + iva
 
-def invoice():
-    """This prints the invoice"""
-    name = raw_input("What is your name?  ")
-    reset()
-    print "---------------INVOICE---------------"
-    print ""
-    print "          DESPENSA FAMILIAR          \n"
-    print "%s" % name
-    print ""
-    count_products(SAVE_EXISTENT)
-    print "\nThe subtotal is:----------- Q%.2f" % sub_total()
-    print "The discount is:----------- Q%.2f" % discount_card()
-    print "The tax is:---------------- Q%.2f" % tax()
-    print "The total to pay is:------- Q%.2f" % total_final()
-    print "-------------------------------------"
-    print "\n\n---Thank you for shopping with us---"
-
-
 def show_products():
     """This shows the products in sale"""
 
@@ -215,6 +197,23 @@ def ask_if_want():
             sell_products()
         else:
             print "Election invalid"
+
+def invoice():
+    """This prints the invoice"""
+    name = raw_input("What is your name?  ")
+    reset()
+    print "---------------INVOICE---------------"
+    print ""
+    print "          DESPENSA FAMILIAR          \n"
+    print "%s" % name
+    print ""
+    count_products(SAVE_EXISTENT)
+    print "\nThe subtotal is:----------- Q%.2f" % sub_total()
+    print "The discount is:----------- Q%.2f" % discount_card()
+    print "The tax is:---------------- Q%.2f" % tax()
+    print "The total to pay is:------- Q%.2f" % total_final()
+    print "-------------------------------------"
+    print "\n\n---Thank you for shopping with us---"
 
 def main_menu():
     """This saves the main_menu"""
