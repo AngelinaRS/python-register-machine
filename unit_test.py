@@ -6,8 +6,8 @@ class RegisterMachineTest(unittest.TestCase):
     def test_product_isalpha(self):
         self.assertTrue(application.product_isalpha("hay"))
         self.assertFalse(application.product_isalpha("5"))
-    #test function 2
 
+    #test function 2
     def test_name_product(self):
         self.assertTrue(application.name_product("PRO").isalpha())
         self.assertTrue(application.name_product(5))
@@ -28,8 +28,17 @@ class RegisterMachineTest(unittest.TestCase):
     def test_silver_card(self):
         self.assertEqual(application.silver_card(100),2)
 
+    #test finction 7
+    def test_subtract_discount(self):
+        self.assertEqual(application.subtract_discount(100,50), 50)
 
+    #test function 8
+    def test_tax(self):
+        self.assertEqual(application.tax(100), 12)
 
+    #test function 9
+    def test_total_final(self):
+        self.assertEqual(application.total_final(100, 12), 112)
 
 if __name__ == "__main__":
     unittest.main()
