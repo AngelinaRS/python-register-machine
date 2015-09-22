@@ -14,7 +14,10 @@ CARDS = [] #This saves the cards
 
 def reset():
     """This cleans the screen"""
-    os.system("reset")
+    if os.name == "posix": #In linux
+        os.system("clear")
+    elif os.name == ("ce", "nt", "dos"): #In windows
+        os.system("cls")
 
 def delete_lists():
     """This deletes the lists"""
@@ -31,30 +34,32 @@ def product_isalpha(product):
         return False
 
 #test 2
-def name_product(product=""):
-    """This saves the name of the product"""
-    if __name__ == '__main__':
-        reset()
-        enter_product = False
-        while enter_product == False:
-            product = raw_input("Add the product: ")
-            product.lower()
-            enter_product = product_isalpha(product)
-            if enter_product == False:
-                print "Insert a valid name"
+def minuscule(product):
+    """This converts the products in minuscule"""
+    product = product.lower()
     return product
 
-#test 3
-def price_product(price=0):
-    """This saves the price of the product"""
-    if __name__ == '__main__':
-        while True:
-            price = raw_input("Add the price: ")
-            try:
-                price = float(price) #This verifies if the price is a number
-                return price
-            except ValueError:
-                print "Insert a number"
+def valid_name_product():
+    """This saves the name of the product"""
+    reset()
+    enter_product = False
+    while enter_product == False:
+        product = raw_input("Add the product: ")
+        product_lower = minuscule(product)
+        enter_product = product_isalpha(product)
+        if enter_product == False:
+            print "insert a valid name"
+    return product_lower
+
+def price_product():
+    """This saves the price"""
+    while True:
+        price = raw_input("Add the price: ")
+        try:
+            price = float(price)
+            return price
+        except ValueError: #if the price is a number
+            print "Insert a number"
     return price
 
 def add_item(product, price):
@@ -64,7 +69,7 @@ def add_item(product, price):
 def add_product_with_price():
     """This adds the product with their respective price"""
 
-    product = name_product()
+    product = valid_name_product()
     price = price_product()
     add_item(product, price)
 
@@ -72,7 +77,7 @@ def add_product_with_price():
         another = raw_input("\nDo you want to insert another article? y/n ")
         another = another.lower()
         if another == "y":
-            product = name_product()
+            product = valid_name_product()
             price = price_product()
             add_item(product, price)
         elif another == "n":
@@ -82,12 +87,20 @@ def add_product_with_price():
             reset()
             print "Insert y or n"
 
-#Test 4
-def insert_product_to_sell(sell=""):
+def option_two():
+    """Verifies if the dictionary is empty"""
+    if ADD_PRODUCTS == {}:
+        print "\n**No products availabe**" #Canņot to buy
+        raw_input("\n\nPress Enter")
+        reset()
+        main_menu()
+    else:
+        ask_if_want()
+
+def insert_product_to_sell():
     """This inserts the product to buy"""
-    if __name__ == '__main__':
-        sell = raw_input("\n - ")
-    sell = sell.lower()
+    product = raw_input("\n - ")
+    sell = minuscule(product)
     return sell
 
 def sell_products():
@@ -121,14 +134,14 @@ def count_products(list_products):
         num_of_products = list_products.count(each_item) #This count each product
         if num_of_products > 0:
             price = ADD_PRODUCTS[each_item]
-            print num_of_products, each_item+ "(s)", "a", ("Q%.2f c/u") % price
+            print num_of_products, each_item + "(s)", "a", ("Q%.2f c/u") % price
 
-#test 5
+#test 3
 def gold_card(subtotal):
     """This calculates the discount of the gold card"""
     return subtotal * 0.05
 
-#test 6
+#test 4
 def silver_card(subtotal):
     """This calculates the discount of the silver card"""
     return subtotal * 0.02
@@ -137,9 +150,8 @@ def sub_total():
     """This adds all the prices"""
     return sum(SAVE_PRICE)
 
-def discount_card(subtotal=0):
+def discount_card(subtotal):
     """This verifies the discount of the card"""
-    subtotal = sub_total()
 
     if "gold" in CARDS:
         return gold_card(subtotal) #This calculates the 5%
@@ -153,28 +165,16 @@ def discount_card(subtotal=0):
     else:
         return 0 #Whitout discount
 
-    #test 7
-def subtract_discount(subtotal=0, discount=0):
-    """This discounts the card to the subtotal"""
-    if __name__ == "__main__":
-        subtotal = sub_total()
-        discount = discount_card()
-    return subtotal - discount
-
-    #test 8
-def tax(subtotal_less_discount=0):
+#test 5
+def tax(subtotal, discount):
     """This calculates the IVA"""
-    if __name__ == "__main__":
-        subtotal_less_discount = subtract_discount()
-    return subtotal_less_discount * 0.12
+    return (subtotal - discount) * 0.12
 
-    #test 9
-def total_final(with_discount=0, iva=0):
+
+#test 6
+def total_final(subtotal, discount, iva):
     """This calculates the total final"""
-    if __name__ == "__main__":
-        with_discount = subtract_discount()
-        iva = tax()
-    return with_discount + iva
+    return (subtotal - discount) + iva
 
 def show_products():
     """This shows the products in sale"""
@@ -186,7 +186,7 @@ def show_products():
 def ask_if_want():
     """This asks to the user if wants to see the products"""
     while True:
-        ask = raw_input("Do you want to see the products in sale? ")
+        ask = raw_input("Do you want to see the products in sale? y/n ")
         ask = ask.lower()
         if ask == "y":
             reset()
@@ -201,6 +201,12 @@ def ask_if_want():
 def invoice():
     """This prints the invoice"""
     name = raw_input("What is your name?  ")
+
+    subtotal = sub_total()
+    discount = discount_card(subtotal)
+    iva = tax(subtotal, discount)
+    total = total_final(subtotal, discount, iva)
+
     reset()
     print "---------------INVOICE---------------"
     print ""
@@ -208,17 +214,18 @@ def invoice():
     print "%s" % name
     print ""
     count_products(SAVE_EXISTENT)
-    print "\nThe subtotal is:----------- Q%.2f" % sub_total()
-    print "The discount is:----------- Q%.2f" % discount_card()
-    print "The tax is:---------------- Q%.2f" % tax()
-    print "The total to pay is:------- Q%.2f" % total_final()
+    print "\nThe subtotal is:----------- Q%.2f" % subtotal
+    print "The discount is:----------- Q%.2f" % discount
+    print "The tax is:---------------- Q%.2f" % iva
+    print "The total to pay is:------- Q%.2f" % total
     print "-------------------------------------"
     print "\n\n---Thank you for shopping with us---"
 
 def main_menu():
-    """This saves the main_menu"""
+    """This saves the main menu"""
 
-    print "\n-----Welcome to Register Machine-----\n"
+    print "-------------------------------------"
+    print "\n     Welcome to Register Machine\n"
     print "       1. Add an Item\n"
     print "       2. Sell Articles\n"
     print "       3. Exit\n"
@@ -231,7 +238,7 @@ def main_menu():
             add_product_with_price()
         elif choose_user == "2":
             reset()
-            ask_if_want()
+            option_two()
         elif choose_user == "3":
             reset()
             sys.exit() #This forces the output of interpreter
@@ -239,5 +246,6 @@ def main_menu():
             reset()
             print "*Election invalid, choose a valid option"
             main_menu()
+
 if __name__ == "__main__":
     main_menu()
