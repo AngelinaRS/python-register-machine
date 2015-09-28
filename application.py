@@ -18,12 +18,16 @@ def reset():
         os.system("clear")
     elif os.name == ("ce", "nt", "dos"): #In windows
         os.system("cls")
+reset()
 
 def delete_lists():
     """This deletes the lists"""
     del SAVE_EXISTENT[:]
     del SAVE_PRICE[:]
     del CARDS[:]
+
+def press_enter():
+    raw_input("\n\nPress Enter")
 
 #test 1
 def product_isalpha(product):
@@ -35,7 +39,6 @@ def product_isalpha(product):
 
 #test 2
 def minuscule(product):
-    """This converts the products in minuscule"""
     product = product.lower()
     return product
 
@@ -87,21 +90,26 @@ def add_product_with_price():
             reset()
             print "Insert y or n"
 
-def option_two():
-    """Verifies if the dictionary is empty"""
-    if ADD_PRODUCTS == {}:
-        print "\n**No products availabe**" #Canņot to buy
-        raw_input("\n\nPress Enter")
-        reset()
-        main_menu()
-    else:
-        ask_if_want()
-
 def insert_product_to_sell():
     """This inserts the product to buy"""
     product = raw_input("\n - ")
     sell = minuscule(product)
     return sell
+
+def verify_done(sell):
+    if SAVE_EXISTENT == []:
+        print "\nCan't generate the invoice because You have not bought"
+        press_enter()
+        reset()
+        show_products()
+        sell_products()
+    else:
+        reset()
+        invoice()
+        press_enter()
+        delete_lists()
+        reset()
+        main_menu()
 
 def sell_products():
     """This verifies if the product is available"""
@@ -115,11 +123,7 @@ def sell_products():
             SAVE_EXISTENT.append(sell) #This adds the product to a list
             SAVE_PRICE.append(ADD_PRODUCTS[sell]) #This saves the prices in a list
         elif sell == "done":
-            reset()
-            invoice()
-            raw_input("\n\npress enter")
-            delete_lists()
-            reset()
+            verify_done(sell)
             main_menu()
         elif sell == "gold":
             CARDS.append("gold") #This adds the gold card
@@ -127,6 +131,39 @@ def sell_products():
             CARDS.append("silver") #This adds the silver card
         else:
             print "\nThis product is not available"
+
+def show_products():
+    """This shows the products in sale"""
+
+    print "These are the products in sale"
+    for key, value in ADD_PRODUCTS.iteritems():
+        print "%s: Q%.2f" % (key, value)
+
+def ask_if_want():
+    """This asks to the user if wants to see the products"""
+    while True:
+        ask = raw_input("Do you want to see the products in sale? y/n ")
+        ask = ask.lower()
+        if ask == "y":
+            reset()
+            show_products()
+            sell_products()
+        elif ask == "n":
+            reset()
+            sell_products()
+        else:
+            print "Election invalid"
+
+
+def option_two():
+    """Verifies if the dictionary is empty"""
+    if ADD_PRODUCTS == {}:
+        print "\n**No products availabe**" #Cannot to buy
+        press_enter()
+        reset()
+        main_menu()
+    else:
+        ask_if_want()
 
 def count_products(list_products):
     """This counts each item"""
@@ -175,28 +212,6 @@ def tax(subtotal, discount):
 def total_final(subtotal, discount, iva):
     """This calculates the total final"""
     return (subtotal - discount) + iva
-
-def show_products():
-    """This shows the products in sale"""
-
-    print "These are the products in sale"
-    for key, value in ADD_PRODUCTS.iteritems():
-        print "%s: Q%.2f" % (key, value)
-
-def ask_if_want():
-    """This asks to the user if wants to see the products"""
-    while True:
-        ask = raw_input("Do you want to see the products in sale? y/n ")
-        ask = ask.lower()
-        if ask == "y":
-            reset()
-            show_products()
-            sell_products()
-        elif ask == "n":
-            reset()
-            sell_products()
-        else:
-            print "Election invalid"
 
 def invoice():
     """This prints the invoice"""
