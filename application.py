@@ -27,6 +27,7 @@ def delete_lists():
     del CARDS[:]
 
 def press_enter():
+    """This says to the user press enter"""
     raw_input("\n\nPress Enter")
 
 #test 1
@@ -39,6 +40,7 @@ def product_isalpha(product):
 
 #test 2
 def minuscule(product):
+    """This converts the product in minuscule"""
     product = product.lower()
     return product
 
@@ -96,7 +98,8 @@ def insert_product_to_sell():
     sell = minuscule(product)
     return sell
 
-def verify_done(sell):
+def verify_done():
+    """This verifies if the user not buys"""
     if SAVE_EXISTENT == []:
         print "\nCan't generate the invoice because You have not bought"
         press_enter()
@@ -123,7 +126,7 @@ def sell_products():
             SAVE_EXISTENT.append(sell) #This adds the product to a list
             SAVE_PRICE.append(ADD_PRODUCTS[sell]) #This saves the prices in a list
         elif sell == "done":
-            verify_done(sell)
+            verify_done()
             main_menu()
         elif sell == "gold":
             CARDS.append("gold") #This adds the gold card
