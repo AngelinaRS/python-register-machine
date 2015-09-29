@@ -9,7 +9,7 @@ class RegisterMachineTest(unittest.TestCase):
 
     #test function 2
     def test_minuscule(self):
-        self.assertTrue(application.minuscule("Dulce").islower())
+        self.assertTrue(application.minuscule("DULCE"), "dulce")
 
     #test function 3
     def test_gold_card(self):
